@@ -78,6 +78,16 @@ impl ApplicationCommand {
         super::author_id(self.user.as_ref(), self.member.as_ref())
     }
 
+    /// the user that invoked the interaction.
+    ///
+    /// This will first check for the [`member`] and if that is not present returns the [`user`].
+    ///
+    /// [`member`]: Self::member
+    /// [`user`]: Self::user
+    pub const fn author(&self) -> Option<&User> {
+        super::author(self.user.as_ref(), self.member.as_ref())
+    }
+
     /// Whether the interaction was invoked in a DM.
     pub const fn is_dm(&self) -> bool {
         self.user.is_some()

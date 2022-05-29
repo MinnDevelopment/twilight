@@ -110,6 +110,17 @@ impl Interaction {
             Self::ModalSubmit(modal) => &modal.token,
         }
     }
+
+    /// Author of the interaction. Always [`None`] for [`Ping`] interactions.
+    pub fn author(&self) -> Option<&User> {
+        match self {
+            Self::Ping(_) => None,
+            Self::ApplicationCommand(command) => command.author(),
+            Self::ApplicationCommandAutocomplete(command) => command.author(),
+            Self::MessageComponent(component) => component.author(),
+            Self::ModalSubmit(modal) => modal.author(),
+        }
+    }
 }
 
 impl<'de> Deserialize<'de> for Interaction {
@@ -119,14 +130,22 @@ impl<'de> Deserialize<'de> for Interaction {
 }
 
 const fn author_id(user: Option<&User>, member: Option<&PartialMember>) -> Option<Id<UserMarker>> {
+    if let Some(user) = author(user, member) {
+        return Some(user.id);
+    }
+
+    None
+}
+
+const fn author<'a>(user: Option<&'a User>, member: Option<&'a PartialMember>) -> Option<&'a User> {
     if let Some(member) = member {
         if let Some(user) = &member.user {
-            return Some(user.id);
+            return Some(user);
         }
     }
 
     if let Some(user) = user {
-        return Some(user.id);
+        return Some(user);
     }
 
     None
