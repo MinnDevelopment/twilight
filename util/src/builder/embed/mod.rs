@@ -53,6 +53,18 @@ use twilight_validate::embed::{embed as validate_embed, EmbedValidationError};
 #[must_use = "must be built into an embed"]
 pub struct EmbedBuilder(Embed);
 
+/// Extension trait to add builder factory
+pub trait EmbedGetBuilder {
+    /// Discoverability function for [`EmbedBuilder`]
+    fn builder() -> EmbedBuilder;
+}
+
+impl EmbedGetBuilder for Embed {
+    fn builder() -> EmbedBuilder {
+        EmbedBuilder::new()
+    }
+}
+
 impl EmbedBuilder {
     /// Create a new embed builder.
     pub fn new() -> Self {

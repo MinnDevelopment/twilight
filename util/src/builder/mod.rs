@@ -7,3 +7,4 @@ pub mod embed;
 mod interaction_response_data;
 
 pub use self::interaction_response_data::InteractionResponseDataBuilder;
+pub use self::interaction_response_data::InteractionResponseDataGetBuilder;

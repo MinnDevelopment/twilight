@@ -42,6 +42,18 @@ use twilight_model::{
 #[must_use = "builders have no effect if unused"]
 pub struct InteractionResponseDataBuilder(InteractionResponseData);
 
+/// Extension trait to add builder factory
+pub trait InteractionResponseDataGetBuilder {
+    /// Discoverability function for [`InteractionResponseDataBuilder`]
+    fn builder() -> InteractionResponseDataBuilder;
+}
+
+impl InteractionResponseDataGetBuilder for InteractionResponseData {
+    fn builder() -> InteractionResponseDataBuilder {
+        InteractionResponseDataBuilder::new()
+    }
+}
+
 impl InteractionResponseDataBuilder {
     /// Create a new builder to construct an [`InteractionResponseData`].
     pub const fn new() -> Self {
