@@ -9,7 +9,7 @@ use tokio::{
     sync::mpsc::{self, UnboundedReceiver, UnboundedSender},
     time::timeout,
 };
-use tokio_tungstenite::tungstenite::Message;
+use tokio_tungstenite::tungstenite::{Error, Message};
 
 pub struct SocketForwarder {
     rx: UnboundedReceiver<Message>,
@@ -73,7 +73,11 @@ impl SocketForwarder {
                         }
                     }
                     Some(Err(source)) => {
-                        tracing::warn!("socket errored: {source}");
+                        if matches!(source, Error::Io(_)) {
+                            tracing::debug!("socket errored: {source}");
+                        } else {
+                            tracing::warn!("socket errored: {source}");
+                        }
 
                         break;
                     }
